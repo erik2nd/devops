@@ -1,0 +1,9 @@
+services:
+  server:
+    container_name: server
+    build: "../part 5/"
+  nginx:
+    container_name: nginx
+    build: .
+    ports:
+      - 80:8080
