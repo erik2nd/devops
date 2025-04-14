@@ -1,0 +1,17 @@
+get_color_name() {
+    case $1 in
+        1) echo "white" ;;
+        2) echo "red" ;;
+        3) echo "green" ;;
+        4) echo "blue" ;;
+        5) echo "purple" ;;
+        6) echo "black" ;;
+    esac
+}
+
+echo ""
+
+echo "Column 1 background = ${column1_background:-default} ($(get_color_name ${column1_background_final}))"
+echo "Column 1 font color = ${column1_font_color:-default} ($(get_color_name ${column1_font_color_final}))"
+echo "Column 2 background = ${column2_background:-default} ($(get_color_name ${column2_background_final}))"
+echo "Column 2 font color = ${column2_font_color:-default} ($(get_color_name ${column2_font_color_final}))"

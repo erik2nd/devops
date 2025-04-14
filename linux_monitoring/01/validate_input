@@ -1,0 +1,4 @@
+if [ $# -ne 1 ]; then
+    echo "Incorrect input: no parameters or more than one parameter is passed"
+    exit 1
+fi

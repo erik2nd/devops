@@ -1,0 +1,36 @@
+START_TIME=$(date +%s)
+
+TOTAL_FOLDERS=$(find "$DIR" -type d | wc -l)
+
+TOP_FOLDERS=$(du -h "$DIR" | sort -rh | head -n 5 | nl -v 1 -w 1 | sed 's/\t/, /g' | sed 's/\([0-9]*\), \(.*\), \(.*\)/\1 - \3, \2/')
+
+TOTAL_FILES=$(find "$DIR" -type f | wc -l)
+
+CONFIG_FILES=$(find "$DIR" -type f -name "*.conf" | wc -l)
+TEXT_FILES=$(find "$DIR" -type f -name "*.txt" | wc -l)
+EXEC_FILES=$(find "$DIR" -type f -executable | wc -l)
+LOG_FILES=$(find "$DIR" -type f -name "*.log" | wc -l)
+ARCHIVE_FILES=$(find "$DIR" -type f \( -name "*.tar" -o -name "*.gz" -o -name "*.zip" \) | wc -l)
+SYMLINKS=$(find "$DIR" -type l | wc -l)
+
+TOP_FILES=$(find "$DIR" -type f -exec du -h {} + | sort -rh | head -n 10 | nl -v 1 -w 1 )
+
+TOP_EXEC_FILES=$(find "$DIR" -type f -executable -exec du -h {} + | sort -rh | head -n 10)
+
+TOP_EXEC_FILES_HASHED=""
+COUNTER=1
+
+for FILE in $(echo "$TOP_EXEC_FILES" | awk '{print $2}'); do
+  HASH=$(md5sum "$FILE" | awk '{print $1}')
+  SIZE=$(du -h "$FILE" | awk '{print $1}')
+  TOP_EXEC_FILES_HASHED+="$COUNTER - $FILE, $SIZE, $HASH"
+  
+  if [[ $COUNTER -lt $(echo "$TOP_EXEC_FILES" | wc -l) ]]; then
+    TOP_EXEC_FILES_HASHED+=$'\n'
+  fi
+
+  ((COUNTER++))
+done
+
+END_TIME=$(date +%s)
+EXEC_TIME=$(echo "scale=2; ($END_TIME - $START_TIME) / 1" | bc)

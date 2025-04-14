@@ -1,0 +1,16 @@
+if [ $# -ne 1 ]; then
+  echo "Incorrect input: exactly 1 parameter must be passed"
+  exit 1
+fi
+
+DIR=$1
+
+if [ ! -d "$DIR" ]; then
+  echo "Incorrect input: provided path is not a valid directory"
+  exit 1
+fi
+
+if [[ ! "$DIR" =~ /$ ]]; then
+  echo "Incorrect input: directory path must end with a '/'"
+  exit 1
+fi

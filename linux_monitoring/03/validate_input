@@ -1,0 +1,23 @@
+if [ $# -ne 4 ]; then
+    echo "Incorrect input: exactly 4 parameters must be passed"
+    echo "Example: $0 <names_bg> <names_fg> <values_bg> <values_fg>"
+    exit 1
+fi
+
+BG_NAME=$1
+FG_NAME=$2
+BG_VALUE=$3
+FG_VALUE=$4
+
+for param in $BG_NAME $FG_NAME $BG_VALUE $FG_VALUE; do
+    if [[ "$param" -lt 1 || "$param" -gt 6 ]]; then
+        echo "Incorrect input: parameters must be digits from 1 to 6"
+        exit 1
+    fi
+done
+
+if [ "$BG_NAME" -eq "$FG_NAME" ] || [ "$BG_VALUE" -eq "$FG_VALUE" ]; then
+    echo "Incorrect input: background color and font color for the same column cannot match"
+    echo "Please restart script with correct parameters"
+    exit 0
+fi

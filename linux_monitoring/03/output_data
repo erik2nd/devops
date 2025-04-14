@@ -1,0 +1,22 @@
+print_line() {
+    local name=$1
+    local value=$2
+    echo -e "\e[${NAME_BG_COLOR};${NAME_FG_COLOR}m$name\e[0m = \e[${VALUE_BG_COLOR};${VALUE_FG_COLOR}m$value\e[0m"
+}
+
+print_line "HOSTNAME" "$HOSTNAME"
+print_line "TIMEZONE" "$TIMEZONE"
+print_line "USER" "$USER"
+print_line "OS" "$OS"
+print_line "DATE" "$DATE"
+print_line "UPTIME" "$UPTIME"
+print_line "UPTIME_SEC" "$UPTIME_SEC"
+print_line "IP" "$IP"
+print_line "MASK" "$MASK"
+print_line "GATEWAY" "$GATEWAY"
+print_line "RAM_TOTAL" "$RAM_TOTAL"
+print_line "RAM_USED" "$RAM_USED"
+print_line "RAM_FREE" "$RAM_FREE"
+print_line "SPACE_ROOT" "$SPACE_ROOT"
+print_line "SPACE_ROOT_USED" "$SPACE_ROOT_USED"
+print_line "SPACE_ROOT_FREE" "$SPACE_ROOT_FREE"

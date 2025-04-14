@@ -1,0 +1,25 @@
+HOSTNAME=$(hostname)
+
+TIMEZONE=$(timedatectl | grep "Time zone" | awk '{print $3 " UTC " $5}')
+TIMEZONE=$(echo "$TIMEZONE" | sed 's/\([+-]\)\([0-9]\)\([0-9]\)\([0-9]\)\([0-9]\)\([)]\)/\1\3/')
+
+USER=$(whoami)
+
+OS=$(cat /etc/os-release | grep ^PRETTY_NAME | cut -d '"' -f 2)
+
+DATE=$(date '+%d %b %Y %H:%M:%S')
+
+UPTIME=$(uptime -p | sed 's/up //')
+UPTIME_SEC=$(cat /proc/uptime | awk '{print int($1)}')
+
+IP=$(hostname -I | awk '{print $1}')
+MASK=$(ip -o -f inet addr show | awk '/scope global/ {print $4}' | cut -d '/' -f 2 | awk '{print "255.255.255." 256 - 2 ^ (32 - $1)}')
+GATEWAY=$(ip route | grep default | awk '{print $3}')
+
+RAM_TOTAL=$(free | awk '/Mem:/ {printf "%.3f GB", $2/1000/1000}')
+RAM_USED=$(free | awk '/Mem:/ {printf "%.3f GB", $3/1000/1000}')
+RAM_FREE=$(free | awk '/Mem:/ {printf "%.3f GB", $7/1000/1000}')
+
+SPACE_ROOT=$(df / | awk 'NR==2 {printf "%.2f MB", $2/1024}')
+SPACE_ROOT_USED=$(df / | awk 'NR==2 {printf "%.2f MB", $3/1024}')
+SPACE_ROOT_FREE=$(df / | awk 'NR==2 {printf "%.2f MB", $4/1024}')
