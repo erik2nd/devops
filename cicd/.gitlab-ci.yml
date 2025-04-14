@@ -1,0 +1,67 @@
+stages:
+  - build
+  - codestyle
+  - test
+  - deploy
+
+build-job:
+  stage: build
+  script:
+    - cd src/cat
+    - make
+    - cd ../grep
+    - make
+  artifacts:
+    paths:
+      - src/cat/s21_cat
+      - src/grep/s21_grep
+    expire_in: 30 days
+  after_script:
+    - bash src/tg.sh "$CI_JOB_STAGE" "$CI_JOB_STATUS"
+    
+codestyle-job:
+  stage: codestyle
+  script:
+    - cd src/cat
+    - clang-format -n -Werror *.c *.h
+    - cd ../grep
+    - clang-format -n -Werror *.c *.h
+  after_script:
+    - bash src/tg.sh "$CI_JOB_STAGE" "$CI_JOB_STATUS"
+
+test-job:
+  stage: test
+  script:
+    - cd src/cat
+    - |
+      bash test.sh > test_output.log
+      cat test_output.log
+      if ! grep -q "FAIL: 0" test_output.log; then
+        echo "cat test(s) failed. See details above"
+        exit 1
+      fi
+    - cd ../grep
+    - |
+      bash test.sh > test_output.log
+      cat test_output.log
+      if ! grep -q "FAIL: 0" test_output.log; then
+        echo "grep test(s) failed. See details above"
+        exit 1
+      fi
+  dependencies:
+    - build-job
+    - codestyle-job
+  when: on_success
+  after_script:
+    - bash src/tg.sh "$CI_JOB_STAGE" "$CI_JOB_STATUS"
+
+
+deploy-job:
+  stage: deploy
+  script:
+    - bash src/deploy.sh
+  dependencies:
+    - build-job
+  when: manual
+  after_script:
+    - bash src/tg.sh "$CI_JOB_STAGE" "$CI_JOB_STATUS"
